@@ -1829,6 +1829,8 @@ void UpdateMusicStream(Music music)
 {
     if (music.stream.buffer == NULL) return;
 
+    ma_mutex_lock(&AUDIO.System.lock);
+
     unsigned int subBufferSizeInFrames = music.stream.buffer->sizeInFrames/2;
 
     // On first call of this function we lazily pre-allocated a temp buffer to read audio files/memory data in
@@ -1982,6 +1984,8 @@ void UpdateMusicStream(Music music)
     // NOTE: In case window is minimized, music stream is stopped,
     // just make sure to play again on window restore
     if (IsMusicStreamPlaying(music)) PlayMusicStream(music);
+
+    ma_mutex_unlock(&AUDIO.System.lock);
 }
 
 // Check if any music is playing
